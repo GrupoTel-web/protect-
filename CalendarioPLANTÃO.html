@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendário de Plantão</title>
+  <!-- Incluir CSS do FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+  <!-- Incluir jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Incluir Moment.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <!-- Incluir JS do FullCalendar -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
+  <style>
+    /* Estilos gerais */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    /* Contêiner do calendário */
+    #calendar-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    /* Cabeçalho com cores neutras */
+    #calendar-header {
+      background-color: #e0e0e0;
+      padding: 10px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+      font-size: 1.5em;
+      color: #333;
+    }
+    /* Legenda dos eventos */
+    #event-legend {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    /* Animação de hover nos eventos */
+    .fc-event {
+      transition: transform 0.2s ease-in-out;
+    }
+    .fc-event:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div id="calendar-container">
+    <div id="calendar-header">Calendário de Plantão</div>
+    <div id="calendar"></div>
+    <div id="event-legend">
+      <div class="legend-item" data-category="João">
+        <div class="legend-color" style="background-color: #28a745;"></div> João
+      </div>
+      <div class="legend-item" data-category="Maria">
+        <div class="legend-color" style="background-color: #17a2b8;"></div> Maria
+      </div>
+      <div class="legend-item" data-category="Carlos">
+        <div class="legend-color" style="background-color: #ffc107;"></div> Carlos
+      </div>
+      <div class="legend-item" data-category="all">
+        <div class="legend-color" style="background-color: #6c757d;"></div> Todos
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      // Definição dos eventos
+      var events = [
+        {
+          title: 'Plantão: João',
+          start: '2025-05-01T08:00:00',
+          end: '2025-05-01T16:00:00',
+          color: '#28a745', // Verde
+          category: 'João'
+        },
+        {
+          title: 'Plantão: Maria',
+          start: '2025-05-02T08:00:00',
+          end: '2025-05-02T16:00:00',
+          color: '#17a2b8', // Azul
+          category: 'Maria'
+        },
+        {
+          title: 'Plantão: Carlos',
+          start: '2025-05-03T08:00:00',
+          end: '2025-05-03T16:00:00',
+          color: '#ffc107', // Amarelo
+          category: 'Carlos'
+        }
+      ];
+
+      // Inicialização do calendário
+      var calendar = $('#calendar').fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        events: events
+      });
+
+      // Função para filtrar eventos
+      function filterEvents(category) {
+        var filteredEvents = category === 'all' ? events : events.filter(function(event) {
+          return event.category === category;
+        });
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', filteredEvents);
+        $('#calendar').fullCalendar('rerenderEvents');
+      }
+
+      // Manipulador de clique na legenda
+      $('.legend-item').on('click', function() {
+        var category = $(this).data('category');
+        filterEvents(category);
+      });
+    });
+  </script>
+</body>
+</html>
